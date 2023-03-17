@@ -5,13 +5,9 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-/**
- * @description:
- * @author: HUHA
- * @time: 2023-03-06 15:15
- */
-public class ConsumerWorkQueue1 {
+public class Consumer_Routing2 {
     public static void main(String[] args) throws IOException, TimeoutException {
+
         //1.创建连接工厂
         ConnectionFactory factory = new ConnectionFactory();
         //2. 设置参数
@@ -24,23 +20,8 @@ public class ConsumerWorkQueue1 {
         Connection connection = factory.newConnection();
         //4. 创建Channel
         Channel channel = connection.createChannel();
-        //5. 创建队列Queue
-        /*
-        queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments)
-        参数：
-            1. queue：队列名称
-            2. durable:是否持久化，当mq重启之后，还在
-            3. exclusive：
-                * 是否独占。只能有一个消费者监听这队列
-                * 当Connection关闭时，是否删除队列
-                *
-            4. autoDelete:是否自动删除。当没有Consumer时，自动删除掉
-            5. arguments：参数。
 
-         */
-        //如果没有一个名字叫hello_world的队列，则会创建该队列，如果有则不会创建
-        String queueName = "workqueue";
-        channel.queueDeclare(queueName, true, false, false, null);
+        String queue2Name = "directqueue2";
 
         /*
         basicConsume(String queue, boolean autoAck, Consumer callback)
@@ -51,7 +32,7 @@ public class ConsumerWorkQueue1 {
 
          */
         // 接收消息
-        Consumer consumer = new DefaultConsumer(channel) {
+        Consumer consumer = new DefaultConsumer(channel){
             /*
                 回调方法，当收到消息后，会自动执行该方法
 
@@ -63,17 +44,18 @@ public class ConsumerWorkQueue1 {
              */
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-//                System.out.println("=============================================");
-//                System.out.println("consumerTag：" + consumerTag);
-//                System.out.println("Exchange：" + envelope.getExchange());
-//                System.out.println("RoutingKey：" + envelope.getRoutingKey());
-//                System.out.println("properties：" + properties);
-                System.out.println("body：" + new String(body));
+              /*  System.out.println("consumerTag："+consumerTag);
+                System.out.println("Exchange："+envelope.getExchange());
+                System.out.println("RoutingKey："+envelope.getRoutingKey());
+                System.out.println("properties："+properties);*/
+                System.out.println("body："+new String(body));
+                System.out.println("将日志信息打印到控制台.....");
             }
         };
-        channel.basicConsume(queueName, true, consumer);
+        channel.basicConsume(queue2Name,true,consumer);
 
 
-        //关闭资源？不要，消费者属于监听程序，关闭后无法监听
+        //关闭资源？不要
+
     }
 }
