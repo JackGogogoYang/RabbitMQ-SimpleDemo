@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @description:
+ * @description: 消费者
  * @author: HUHA
  * @time: 2023-03-06 15:15
  */
